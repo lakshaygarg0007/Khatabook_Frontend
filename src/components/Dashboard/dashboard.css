@@ -1,0 +1,15 @@
+/* styles for all screens */
+.bar-chart {
+    width: 100%;
+    height: 300px;
+    //margin: 50px;
+}
+
+/* styles for mobile devices */
+@media (max-width: 767px) {
+    .bar-chart {
+        width: 30%; /* make the chart slightly larger for smaller screens */
+        height: 200px; /* shrink the height on small screens */
+        margin: 10px;
+    }
+}
