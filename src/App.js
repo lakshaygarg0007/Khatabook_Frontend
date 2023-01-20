@@ -2,27 +2,31 @@ import './App.css';
 import Header from './components/Header';
 import Expenses from './components/Expense/Expenses';
 import Earnings from './components/Earnings/Earnings';
-import AddRecord from './components/Earnings/AddRecord';
+import AddEarning from './components/Earnings/AddEarning';
 import AddExpense from './components/Expense/AddExpense';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes, Navigate} from 'react-router-dom';
 import Login from './components/Login';
 import Signup from './Signup';
 import BarGraph from './components/Dashboard/dashboard';
+import Goto from './GoTo';
 
 function App() {
+  const user_data = 5
+  console.log(user_data);
+
   return (
     <>
       <Router>
-        <Header />
-        <Routes>
-          <Route path='/login' element={<Login />} />
-          <Route path='/Signup' element={<Signup />} />
-          <Route path='/' element={<Expenses />} />
-          <Route path='/earnings' element={<Earnings />} />
-          <Route path='/addearning' element={<AddRecord />} />
-          <Route path='/addexpense' element={<AddExpense />} />
-          <Route path='/home' element={<BarGraph />} />
-        </Routes>
+          <Header />
+          <Routes>
+            <Route path='/login' element={<Login />} />
+            <Route path='/Signup' element={<Signup />} />
+            <Route path='/expenses' element={<Expenses />} />
+            <Route path='/earnings' element={<Earnings />} />
+            <Route path='/addearning' element={<AddEarning />} />
+            <Route path='/addexpense' element={<AddExpense />} />
+            <Route path='/' element={<Goto/>} />
+          </Routes>
       </Router>
     </>
   );

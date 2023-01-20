@@ -1,57 +1,65 @@
 import React from 'react';
 import '../../App.js';
 import ExpenseRecord from './ExpenseRecord.jsx';
-import { useState, useEffect } from 'react';
-import {Link } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
+import _ from 'lodash';
 const addExpense = require('./AddExpense')
 
+
+
 export default function Expenses(props) {
-    const [expenses, setExpenses] = useState([
-        {
-            record_name: 1,
-            amount: 100.4,
-            description: 'Spent on Domain Name',
-            payment_method: 'Paytm',
-            date: '8-Jan-2022',
+    const [selectedDate, setSelectedDate] = useState(null);
+    const inputRef = useRef(null);
+    const [expenses, setExpenses] = useState([]);
+    const [user_data, set_user_data] = useState(sessionStorage.getItem("user_data"))
+    const [currentPage, setCurrentPage] = useState(1);
+    const [paginatedPosts, setPaginatedPosts] = useState([]);
+    const page_size = 5;
+
+
+    const options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
         },
-        {
-            record_name: 2,
-            amount: 100.4,
-            description: 'Spent on Food',
-            payment_method: 'Credit Card',
-            date: '8-Jan-2022',
-        },
-        {
-            record_name: 3,
-            amount: 100.4,
-            description: 'Spent on Domain Name',
-            payment_method: 'Paytm',
-            date: '8-Jan-2022',
+        body: {
+           // JSONstringify({"user_id": user_data.id})
         }
-    ]);
+    }
 
     useEffect(() => {
-        fetch('http://192.168.29.13:8000/getExpense')
+        const userData = JSON.parse(user_data)
+
+        fetch('http://192.168.29.13:8000/getExpense', {
+            method: 'POST',
+            headers: {'content-type': 'application/json' },
+            body: JSON.stringify({ user_id: userData.id }),
+          })
             .then((response) => response.json())
             .then((data) => {
                 setExpenses(data)
+                setPaginatedPosts(_(data).slice(0).take(page_size).value());
             });
-    }
-    )
+
+        setPaginatedPosts(_(expenses).slice(0).take(page_size).value());
+    },[]);
 
     let index;
-    const ondelete = () => {
-        console.log("I am on delete", index)
-        setExpenses(expenses.filter((e) => {
-            return e !== index
-        }
-
-        )
-        )
-    }
 
     const getIndex = (i) => {
         index = i
+    }
+
+    const page_count = expenses ? Math.ceil(expenses.length / page_size) : 0;
+    const pages = _.range(1, page_count + 1)
+
+    const pagination = (page_no) => {
+        setCurrentPage(page_no)
+        const start_index = (page_no - 1) * page_size;
+        const paginatedPosts = _(expenses).slice(start_index).take(page_size).value()
+        setPaginatedPosts(paginatedPosts)
     }
 
     return (
@@ -61,6 +69,16 @@ export default function Expenses(props) {
                     <div className="flex flex-col text-center w-full mb-20">
                         <h1 className="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900">My Expenses</h1>
                     </div>
+                    <div className="lg:w-1/3 w-full mx-auto overflow-auto">
+                        <input className="px-4 py-3" placeholder="Select a date" type="text" value={selectedDate ? format(selectedDate, 'yyyy-MM-dd') : ''}
+                            onClick={() => inputRef.current.focus()}
+                            readOnly />
+                        <input className="hidden" ref={inputRef} type="date" value={selectedDate ? format(selectedDate, 'yyyy-MM-dd') : ''} onChange={e => setSelectedDate(e.target.value)}
+                        />
+                        <input className="px-4 py-3" type="date" placeholder="Select a date" />
+                    </div>
+                    <br></br>
+
                     <div className="lg:w-2/3 w-full mx-auto overflow-auto">
                         <table className="table-auto w-full text-left whitespace-no-wrap">
                             <thead>
@@ -74,7 +92,7 @@ export default function Expenses(props) {
                             </thead>
                             <tbody>
                                 {
-                                    expenses.map(
+                                    paginatedPosts.map(
                                         (expense) => {
                                             return <ExpenseRecord expense={expense} getIndex={getIndex} />
                                         }
@@ -84,12 +102,34 @@ export default function Expenses(props) {
                         </table>
                         <br></br>
                         <div className='flex flex-col items-center'>
-                        <Link className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" to='/addexpense'>Add Expense</Link>
+                            <Link className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" to='/addexpense'>Add Expense</Link>
+                        </div>
+
+                        <br></br>
+
+                        <div class="flex justify-center">
+                            <nav>
+                                <ul className="flex list-style-none">
+                                    {
+                                        pages.map((page) => (
+                                            <li className={page === currentPage ? "page-item active" : "page-item"} onClick={() => pagination(page)} >
+                                                {<a
+                                                    className={page === currentPage ? "page-link relative block py-1.5 px-3 rounded border-0 bg-red-400 outline-none transition-all duration-300 rounded text-white hover:text-white hover:bg-red-600 shadow-md focus:shadow-md" :
+                                                        "page-link relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 rounded text-gray-800 hover:text-gray-800 hover:bg-gray-200 focus:shadow-none"}
+
+                                                >
+                                                    {page}
+                                                </a>}
+                                            </li>
+                                        ))
+                                    }
+                                </ul>
+                            </nav>
                         </div>
                     </div>
 
                 </div>
             </section>
         </div>
-    )
+    );
 }

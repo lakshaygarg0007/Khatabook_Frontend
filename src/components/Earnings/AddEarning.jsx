@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
-export default function AddExpense(props) {
+export default function AddEarning(props) {
     let navigate = useNavigate();
-    const [payment_methods, set_payment_methods] = useState([]);
     const [amount, set_amount] = useState("");
     const [description, set_description] = useState("");
-    const [payment_method, set_payment_method] = useState(null);
+    const [payment_methods, set_payment_methods] = useState([]);
     const [date, set_date] = useState(null);
     const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
+    
     
     const add_record = (() => {
         const data = {
@@ -19,17 +19,19 @@ export default function AddExpense(props) {
             "date": date
         };
 
+        console.log("lakshay" + payment_methods)
+
         const options = {
             method: "POST",
             body: JSON.stringify(data),
             headers: {
                 "Content-Type": "application/json",
-            },
+              },
         }
 
-        const res = fetch('http://192.168.29.13:8000/addExpense', options);
+        const res = fetch('http://192.168.29.13:8000/addEarning', options);
         //console.log(res.json())
-        navigate('/expenses');
+        navigate('/earnings');
 
     }
     );
@@ -51,35 +53,31 @@ export default function AddExpense(props) {
         fetch_payment_methods()
     }, []);
 
-
-
-    let A = 'las'
-
     return (
         <>
             <section class="text-gray-600 body-font relative">
                 <div class="container px-5 py-24 mx-auto">
                     <div class="flex flex-col text-center w-full mb-12">
-                        <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Add Expense</h1>
+                        <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Add Earning</h1>
                     </div>
                     <div class="lg:w-1/2 md:w-2/3 mx-auto">
                         <div class="flex flex-wrap -m-2">
                             <div class="p-2 w-1/4">
                                 <div class="relative">
                                     <label for="name" class="leading-7 text-sm text-gray-600">Amount</label>
-                                    <input type="text" id="name" name="name" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={(e) => set_amount(e.target.value)} required/>
+                                    <input type="text" id="name" name="name" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={(e) => set_amount(e.target.value)} />
                                 </div>
                             </div>
                             <div class="p-2 w-1/4">
                                 <div class="relative">
                                     <label for="email" class="leading-7 text-sm text-gray-600">Description</label>
-                                    <input type="text" id="email" name="email" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 fro leading-8 transition-colors duration-200 ease-in-out" onChange={(e) => set_description(e.target.value)} required />
+                                    <input type="text" id="email" name="email" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={(e) => set_description(e.target.value)}/>
                                 </div>
                             </div>
                             <div class="p-2 w-1/4">
                                 <div class="relative">
                                     <label for="email" class="leading-7 text-sm text-gray-600">Payment Method</label>
-                                    <select className="form-select form-select-lg w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base  outline-none text-gray-700 leading-8 transition-colors duration-200 ease-in-out py-2 px-3" onChange={(e) => set_payment_method(e.target.value)}>
+                                    <select className="form-select form-select-lg w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base  outline-none text-gray-700 leading-8 transition-colors duration-200 ease-in-out py-2 px-3" onChange={(e) => set_payment_methods(e.target.value)}>
                                         {
                                             payment_methods.map(payment_method => (
                                                 <option key="{payment_method.payment_methods}" value={payment_method.payment_methods} className="py-2"> {payment_method.payment_methods}</option>
@@ -91,11 +89,11 @@ export default function AddExpense(props) {
                             <div class="p-2 w-1/4">
                                 <div class="relative">
                                     <label for="email" class="leading-7 text-sm text-gray-600">Date</label>
-                                    <input type="date" id="email" name="email" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={(e) => set_date(e.target.value)} required />
+                                    <input type="date" id="email" name="email" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={(e) => set_date(e.target.value)} required/>
                                 </div>
                             </div>
                             <div class="p-2 w-full">
-                                <button class="flex mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg" onClick={add_record}>Add Expense</button>
+                                <button class="flex mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg" onClick={add_record}>Add Earning</button>
                             </div>
                         </div>
                     </div>
