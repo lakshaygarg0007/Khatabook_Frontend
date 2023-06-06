@@ -10,7 +10,12 @@ export default function AddExpense(props) {
     const [date, set_date] = useState(null);
     const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
     
+    
     const add_record = (() => {
+        if (!amount || !description || !date) {
+            alert("Please Fill all details before adding Record");
+            return;
+        }
         const data = {
             "user_id": user_data.id,
             "amount": amount,
@@ -28,11 +33,11 @@ export default function AddExpense(props) {
         }
 
         const res = fetch('http://192.168.29.13:8000/addExpense', options);
-        //console.log(res.json())
-        navigate('/expenses');
-
-    }
-    );
+        const new_amount = amount + parseFloat(user_data.expense)
+        sessionStorage.setItem('user_data', JSON.stringify({ name: user_data.name, id: user_data.id,  
+            earning: user_data.earning, expense: new_amount}));
+        navigate('/expenses', {state: {refresh: true}});
+    });
 
     useEffect(() => {
         const options = {
@@ -53,7 +58,7 @@ export default function AddExpense(props) {
 
 
 
-    let A = 'las'
+    
 
     return (
         <>
@@ -67,7 +72,7 @@ export default function AddExpense(props) {
                             <div class="p-2 w-1/4">
                                 <div class="relative">
                                     <label for="name" class="leading-7 text-sm text-gray-600">Amount</label>
-                                    <input type="text" id="name" name="name" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={(e) => set_amount(e.target.value)} required/>
+                                    <input type="number" id="name" name="name" class="appearance-none w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onChange={(e) => set_amount(e.target.value)} required/>
                                 </div>
                             </div>
                             <div class="p-2 w-1/4">

@@ -26,11 +26,12 @@ export default function Login(props) {
     }
 
     try {
-        const response = await fetch('http://192.168.29.13:8000/login', options);
+        const response = await fetch('http://localhost:8000/login', options);
         if(response.status === 200) {
           const json_response = await response.json()
           sessionStorage.setItem('user_data', JSON.stringify({ name: json_response.name, id: json_response.id,  
             earning: json_response.earning, expense: json_response.expense}));
+          console.log(JSON.parse(sessionStorage.getItem('user_data')))
           navigate('/', { state: { id: json_response.id, name : json_response.name, earning: json_response.earning, 
             expense: json_response.expense } })
             set_error('')
@@ -72,7 +73,7 @@ export default function Login(props) {
           </div>
           { error && 
             (
-              <div class="text-red-500  mt-4 px-12">{error}</div>
+              <div className="text-red-500  mt-4 px-12">{error}</div>
             )
           }
         </div>

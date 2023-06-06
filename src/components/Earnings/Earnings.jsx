@@ -17,8 +17,7 @@ export default function Earnings(props) {
 
     const [earnings, setEarning] = useState([]);
     const page_size = 5;
-
-    // let size = 3;
+    //const [earningRefresh] = useState(sessionStorage.getItem("earning_refresh"))
 
     const userData = JSON.parse(user_data)
     const options = {
@@ -30,13 +29,10 @@ export default function Earnings(props) {
     }
 
     useEffect(() => {
-        console.log('iam')
         fetch('http://192.168.29.13:8000/getEarning', options)
             .then((response) => response.json())
             .then((data) => {
                 setEarning(data)
-                //(earnings)
-                //console.log(earnings)
                 console.log(data)
                 setPaginatedPosts(_(data).slice(0).take(page_size).value());
                 setTotalPages(3);
@@ -45,9 +41,9 @@ export default function Earnings(props) {
         setData(earnings);
         setTotalPages(3);
         setPaginatedPosts(_(earnings).slice(0).take(page_size).value());
-        //size = earnings.size
-    }, []
-    )
+        //setEarningRefresh(false);
+        //earningRefresh == true ? sessionStorage.setItem("earningRefresh") : 
+    },[])
 
     let index;
 
@@ -88,7 +84,7 @@ export default function Earnings(props) {
                                 {
                                     paginatedPosts.map((
                                         (earning) => {
-                                            return <EarningRecord earning={earning} />
+                                            return <EarningRecord earning={earning}/>
                                         }
                                     )
                                     )
@@ -97,8 +93,13 @@ export default function Earnings(props) {
                         </table>
                         <br />
                     </div>
+                    {paginatedPosts.length === 0 ? <div className='flex flex-col items-center'>No Records Found</div> : <div/>}
+                    <br />
                     <div className='flex flex-col items-center'>
-                        <Link className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" to="/addearning">Add Earning</Link>
+                        <Link className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" 
+                            to="/addearning" setSta>
+                            Add Earning
+                        </Link>
                     </div>
                     <br />
                     <div class="flex justify-center">
@@ -110,7 +111,6 @@ export default function Earnings(props) {
                                             {<a
                                                 className={page === currentPage ? "page-link relative block py-1.5 px-3 rounded border-0 bg-red-400 outline-none transition-all duration-300 rounded text-white hover:text-white hover:bg-red-600 shadow-md focus:shadow-md" :
                                                     "page-link relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 rounded text-gray-800 hover:text-gray-800 hover:bg-gray-200 focus:shadow-none"}
-
                                             >
                                                 {page}
                                             </a>}

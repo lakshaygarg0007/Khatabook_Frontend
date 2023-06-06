@@ -11,9 +11,6 @@ import BarGraph from './components/Dashboard/dashboard';
 import Goto from './GoTo';
 
 function App() {
-  const user_data = 5
-  console.log(user_data);
-
   return (
     <>
       <Router>

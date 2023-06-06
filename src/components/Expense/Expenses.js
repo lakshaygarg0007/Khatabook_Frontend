@@ -2,7 +2,7 @@ import React from 'react';
 import '../../App.js';
 import ExpenseRecord from './ExpenseRecord.jsx';
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { format } from 'date-fns';
 import _ from 'lodash';
 const addExpense = require('./AddExpense')
@@ -13,10 +13,16 @@ export default function Expenses(props) {
     const [selectedDate, setSelectedDate] = useState(null);
     const inputRef = useRef(null);
     const [expenses, setExpenses] = useState([]);
-    const [user_data, set_user_data] = useState(sessionStorage.getItem("user_data"))
+    const [user_data] = useState(sessionStorage.getItem("user_data"))
     const [currentPage, setCurrentPage] = useState(1);
     const [paginatedPosts, setPaginatedPosts] = useState([]);
     const page_size = 5;
+    const [refresh, setRefresh] = useState(false);
+    let location = useLocation()
+    console.log(location.state)
+    // if(location.state !== null) {
+    //     setRefresh(false)
+    // }
 
 
     const options = {
@@ -25,18 +31,19 @@ export default function Expenses(props) {
             "Content-Type": "application/json",
         },
         body: {
-           // JSONstringify({"user_id": user_data.id})
+            // JSONstringify({"user_id": user_data.id})
         }
     }
 
+
+
     useEffect(() => {
         const userData = JSON.parse(user_data)
-
         fetch('http://192.168.29.13:8000/getExpense', {
             method: 'POST',
-            headers: {'content-type': 'application/json' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user_id: userData.id }),
-          })
+        })
             .then((response) => response.json())
             .then((data) => {
                 setExpenses(data)
@@ -44,7 +51,7 @@ export default function Expenses(props) {
             });
 
         setPaginatedPosts(_(expenses).slice(0).take(page_size).value());
-    },[]);
+    }, [refresh]);
 
     let index;
 
@@ -94,15 +101,19 @@ export default function Expenses(props) {
                                 {
                                     paginatedPosts.map(
                                         (expense) => {
-                                            return <ExpenseRecord expense={expense} getIndex={getIndex} />
+                                            return <ExpenseRecord expense={expense} getIndex={getIndex} refresh={setRefresh} />
                                         }
                                     )
                                 }
                             </tbody>
                         </table>
                         <br></br>
+                        {paginatedPosts.length === 0 ? <div className='flex flex-col items-center'>No Records Found</div> : <div />}
+                        <br />
                         <div className='flex flex-col items-center'>
-                            <Link className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" to='/addexpense'>Add Expense</Link>
+                            <Link className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" 
+                                to='/addexpense'>
+                                Add Expense</Link>
                         </div>
 
                         <br></br>
@@ -116,7 +127,6 @@ export default function Expenses(props) {
                                                 {<a
                                                     className={page === currentPage ? "page-link relative block py-1.5 px-3 rounded border-0 bg-red-400 outline-none transition-all duration-300 rounded text-white hover:text-white hover:bg-red-600 shadow-md focus:shadow-md" :
                                                         "page-link relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 rounded text-gray-800 hover:text-gray-800 hover:bg-gray-200 focus:shadow-none"}
-
                                                 >
                                                     {page}
                                                 </a>}

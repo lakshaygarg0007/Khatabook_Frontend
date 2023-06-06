@@ -25,7 +25,7 @@ export default function Signup() {
         }
 
         try {
-            fetch('http://192.168.29.13:8000/signup', options).then(
+            fetch('http://localhost:8000/signup', options).then(
                 response => {
                     set_response(response.data);
                     console.log(response.json());
