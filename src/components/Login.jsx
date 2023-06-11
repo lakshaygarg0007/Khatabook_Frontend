@@ -2,6 +2,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import { useState } from 'react';
 import BarGraph from './Dashboard/dashboard';
 import id from 'date-fns/esm/locale/id/index.js';
+import ipaddress from 'C:/Users/HP/OneDrive/Desktop/git/Khatabook_Frontend/src/setip.jsx';
 
 export default function Login(props) {
   const [email, set_email] = useState("");
@@ -26,7 +27,8 @@ export default function Login(props) {
     }
 
     try {
-        const response = await fetch('http://localhost:8000/login', options);
+        const ip = ipaddress();
+        const response = await fetch(ip + '/login', options);
         if(response.status === 200) {
           const json_response = await response.json()
           sessionStorage.setItem('user_data', JSON.stringify({ name: json_response.name, id: json_response.id,  
@@ -81,3 +83,4 @@ export default function Login(props) {
     </>
   )
 }
+//http://localhost:8000

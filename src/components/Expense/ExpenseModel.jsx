@@ -1,8 +1,8 @@
 import moment from 'moment';
 
 function ExpenseModel({ expense, closeModal }) {
-    const delete_record = (async () => {
-        const response = await fetch('http://192.168.29.13:8000/deleteExpense', {
+    const delete_record = (async (ipaddress) => {
+        const response = await fetch('ipaddress + /deleteExpense', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({ expense_id: expense._id }),

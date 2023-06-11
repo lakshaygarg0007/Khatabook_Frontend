@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-
+import ipaddress from 'C:/Users/HP/OneDrive/Desktop/git/Khatabook_Frontend/src/setip.jsx';
 export default function AddExpense(props) {
     let navigate = useNavigate();
     const [payment_methods, set_payment_methods] = useState([]);
@@ -12,6 +12,7 @@ export default function AddExpense(props) {
     
     
     const add_record = (() => {
+        const ip = ipaddress();
         if (!amount || !description || !date) {
             alert("Please Fill all details before adding Record");
             return;
@@ -32,7 +33,7 @@ export default function AddExpense(props) {
             },
         }
 
-        const res = fetch('http://192.168.29.13:8000/addExpense', options);
+        const res = fetch(ip + '/addExpense', options);
         const new_amount = amount + parseFloat(user_data.expense)
         sessionStorage.setItem('user_data', JSON.stringify({ name: user_data.name, id: user_data.id,  
             earning: user_data.earning, expense: new_amount}));
@@ -48,7 +49,7 @@ export default function AddExpense(props) {
         }
 
         async function fetch_payment_methods() {
-            const res = await fetch('http://192.168.29.13:8000/getPaymentMethods', options);
+            const res = await fetch('http://192.168.43.225:8000/getPaymentMethods', options);
             const data = await res.json();
             set_payment_methods(data);
         }

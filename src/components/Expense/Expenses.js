@@ -37,9 +37,9 @@ export default function Expenses(props) {
 
 
 
-    useEffect(() => {
+    useEffect((ipaddress) => {
         const userData = JSON.parse(user_data)
-        fetch('http://192.168.29.13:8000/getExpense', {
+        fetch('ipaddress + /getExpense', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user_id: userData.id }),

@@ -28,8 +28,8 @@ export default function Earnings(props) {
         body: JSON.stringify({ user_id: userData.id })
     }
 
-    useEffect(() => {
-        fetch('http://192.168.29.13:8000/getEarning', options)
+    useEffect((ipaddress) => {
+        fetch('ipaddress + /getEarning', options)
             .then((response) => response.json())
             .then((data) => {
                 setEarning(data)

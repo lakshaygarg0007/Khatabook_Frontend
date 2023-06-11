@@ -7,8 +7,8 @@ function EarningModel({ earning, closeModal }) {
     const [description, setDescription] = useState(earning.description);
     const [paymentMethod, setPaymentMethod] = useState(earning.payment_method);
     const [date, setDate] = useState(earning.date);
-    const delete_record = (async () => {
-        const response = await fetch('http://192.168.29.13:8000/deleteEarning', {
+    const delete_record = (async (ipaddress) => {
+        const response = await fetch(ipaddress + '/deleteEarning', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({ earning_id: earning._id }),
