@@ -5,11 +5,14 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { format } from 'date-fns';
 import _ from 'lodash';
+import ipaddress from 'C:/Users/HP/OneDrive/Desktop/git/Khatabook_Frontend/src/setip.jsx';
+
 const addExpense = require('./AddExpense')
 
 
 
 export default function Expenses(props) {
+    const ip = ipaddress();
     const [selectedDate, setSelectedDate] = useState(null);
     const inputRef = useRef(null);
     const [expenses, setExpenses] = useState([]);
@@ -37,9 +40,9 @@ export default function Expenses(props) {
 
 
 
-    useEffect((ipaddress) => {
+    useEffect(() => {
         const userData = JSON.parse(user_data)
-        fetch('ipaddress + /getExpense', {
+        fetch(ip + '/getExpense', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user_id: userData.id }),

@@ -11,7 +11,7 @@ function Goto() {
     const isAuthenticated = () => {
         console.log('a')
         if (user_data === null || user_data === 'null') {
-            return <Login />;
+            return Login();
         } else {
             return <BarGraph />;
         }

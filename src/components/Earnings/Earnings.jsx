@@ -6,8 +6,11 @@ import Expenses from '../Expense/Expenses.js';
 import Pagination from './Pagination';
 import ReactPaginate from 'react-paginate';
 import _ from 'lodash';
+import ipaddress from 'C:/Users/HP/OneDrive/Desktop/git/Khatabook_Frontend/src/setip.jsx';
+
 
 export default function Earnings(props) {
+    const ip = ipaddress();
     const [data, setData] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
@@ -28,8 +31,9 @@ export default function Earnings(props) {
         body: JSON.stringify({ user_id: userData.id })
     }
 
-    useEffect((ipaddress) => {
-        fetch('ipaddress + /getEarning', options)
+    useEffect(() => {
+        
+        fetch(ip + '/getEarning', options)
             .then((response) => response.json())
             .then((data) => {
                 setEarning(data)

@@ -7,7 +7,7 @@ import AddExpense from './components/Expense/AddExpense';
 import { Route, BrowserRouter as Router, Routes, Navigate} from 'react-router-dom';
 import Login from './components/Login';
 import Signup from './Signup';
-import BarGraph from './components/Dashboard/dashboard';
+// import BarGraph from './components/Dashboard/dashboard';
 import Goto from './GoTo';
 
 function App() {

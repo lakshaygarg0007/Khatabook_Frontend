@@ -10,6 +10,13 @@ export default function AddEarning(props) {
     const [date, set_date] = useState(null);
     const location = useLocation();
     const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
+    
+    
+  
+    const refreshPage = (() => {
+      window.location.reload(false);
+    });
+
     const add_record = (() => {
         const ip = ipaddress();
         if (!amount || !description || !date) {
@@ -33,7 +40,8 @@ export default function AddEarning(props) {
         }
 
         const res = fetch(ip + '/addEarning', options);
-        const new_amount = amount + parseFloat(user_data.earning)
+        const new_amount = amount + parseFloat(user_data.earning);
+        console.log(new_amount);
         sessionStorage.setItem('user_data', JSON.stringify({ name: user_data.name, id: user_data.id,  
             earning: new_amount, expense: user_data.expense}));
         navigate('/earnings');  
@@ -48,7 +56,7 @@ export default function AddEarning(props) {
         }
 
         async function fetch_payment_methods() {
-            const res = await fetch(ipaddress + '/getPaymentMethods', options);
+            const res = await fetch( 'http://192.168.43.225:8000/getPaymentMethods', options);
             const data = await res.json();
             set_payment_methods(data);
         }
@@ -96,7 +104,7 @@ export default function AddEarning(props) {
                                 </div>
                             </div>
                             <div class="p-2 w-full">
-                                <button class="flex mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg" onClick={add_record}>Add Earning</button>
+                                <button class="flex mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg" onClick={() => { add_record(); refreshPage(); }}>Add Earning</button>
                             </div>
                         </div>
                     </div>
@@ -105,3 +113,4 @@ export default function AddEarning(props) {
         </>
     )
 }
+// add_record

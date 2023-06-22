@@ -10,7 +10,9 @@ export default function AddExpense(props) {
     const [date, set_date] = useState(null);
     const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
     
-    
+    const refreshPage = (() => {
+        window.location.reload(false);
+      });
     const add_record = (() => {
         const ip = ipaddress();
         if (!amount || !description || !date) {
@@ -101,7 +103,7 @@ export default function AddExpense(props) {
                                 </div>
                             </div>
                             <div class="p-2 w-full">
-                                <button class="flex mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg" onClick={add_record}>Add Expense</button>
+                                <button class="flex mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg" onClick={() => { add_record(); refreshPage(); }}>Add Expense</button>
                             </div>
                         </div>
                     </div>
