@@ -1,30 +1,68 @@
 import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, Legend } from 'recharts';
 import {useLocation} from 'react-router-dom';
 import './dashboard.css'
-
+import React, { useEffect, useState } from 'react';
 // const data = [
 //     { name: 'Expenses', value: 4000 },
 //     { name: 'Earnings', value: 3000 },
 // ];
-const data1 = [
-    { name: 'Group A', value: 400 },
-    { name: 'Group B', value: 300 },
-    { name: 'Group C', value: 300 },
-    { name: 'Group D', value: 200 },
-];
+// const data1 = [
+//     { name: 'Group A', value: 400 },
+//     { name: 'Group B', value: 300 },
+//     { name: 'Group C', value: 300 },
+//     { name: 'Group D', value: 200 },
+// ];
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-export default function BarGraph () {
-    const location = useLocation();
-    //const { id, color } = state;
-    const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
-    const earning = user_data.earning
-    const expense = user_data.expense
-    const data = [
-        { name: 'Expenses', value: earning},
-        { name: 'Earnings', value: expense},
-    ]
+ export default function BarGraph () {
+     const location = useLocation();
+     const [chartData, setChartData] = useState([]);
+     const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
+     const earning = user_data.earning
+     const expense = user_data.expense
+    //  const data = [
+    //      { name: 'Expenses', value: earning},
+    //      { name: 'Earnings', value: expense},
+    // ]
+     //const { id, color } = state;
+     useEffect(() => {
+        // Fetch data from the API
+        fetch('http://192.168.43.225:8000/getEarningAndExpense')
+          .then(response => response.json())
+          .then(data => {
+            // Parse the data into the desired format
+            const parsedData = data.map(item => (
+                { name: item.name, value: item.value }
+            // { name: 'Earnings', value: expense}, 
+        
+                
+              ));
+    
+            // Set the chart data state
+            setChartData(parsedData);
+          });
+        },[]);
+        const data = [
+                 { name: 'Expenses', value: earning},
+                 { name: 'Earnings', value: expense},
+            ]
+    //  const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
+    //  const earning = user_data.earning
+    //  const expense = user_data.expense
+    //  const data1 = [
+    //      { name: 'Expenses', value: earning},
+    //      { name: 'Earnings', value: expense},
+    // ]
+    // const user_data = (async () => {
+    //     const response = await fetch( 'http://192.168.43.225:8000/deleteEarning', {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    //         body: JSON.stringify({ earning_id: earning._id }),
+    //     }).then(() => {
+    //         closeModal();
+    //     });
+    // });
 
     return (
         <>
@@ -46,8 +84,8 @@ export default function BarGraph () {
                             <div>
                                 <div className="rounded-lg overflow-hidden">
                                     <PieChart width={400} height={400}>
-                                        <Pie data={data1} dataKey="value" cx={200} cy={200} outerRadius={80} fill="#8884d8">
-                                            {data.map((entry, index) => (
+                                        <Pie data={chartData} dataKey="value" cx={200} cy={200} outerRadius={80} fill="#8884d8">
+                                            {chartData.map((entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
                                         </Pie>
@@ -66,3 +104,17 @@ export default function BarGraph () {
 
     );
 };
+// export default function BarGraph () {
+//     const location = useLocation();
+// const earning = user_data.earning
+//      const expense = user_data.expense
+//      const data = [
+//          { name: 'Expenses', value: earning},
+//          { name: 'Earnings', value: expense},
+//     ]
+// const data1 = [
+//     { name: 'Group A', value: 400 },
+//     { name: 'Group B', value: 300 },
+//     { name: 'Group C', value: 300 },
+//     { name: 'Group D', value: 200 },
+// ];

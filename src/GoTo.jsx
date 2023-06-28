@@ -9,7 +9,7 @@ function Goto() {
     console.log(user_data)
 
     const isAuthenticated = () => {
-        console.log('a')
+        console.log('azzzzYUUU')
         if (user_data === null || user_data === 'null') {
             return Login();
         } else {
