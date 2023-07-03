@@ -18,6 +18,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
  export default function BarGraph () {
      const location = useLocation();
+     const [expenses, setExpenses] = useState(0);
     //  const [chartData, setChartData] = useState([]);
      const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
      const user_id = user_data.id;
@@ -38,10 +39,10 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
      //const { id, color } = state;
      var question;
      var queue;
-     var data = [
-        { name: 'Expenses', value: 10},
-       { name: 'Earnings', value: 10 },
-    ];
+    //  var data = [
+    //     { name: 'Expenses', value: 10},
+    //    { name: 'Earnings', value: 10 },
+    // ];
      useEffect(() => {
         // Fetch data from the API
          async function EarnandExpense() {
@@ -61,10 +62,9 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
          return totalEarningsandExpenses;
         }  
          EarnandExpense().then(() => {
-            cube().then((value) => {
-              data[0].value = value; // Assign the value to data[0]
-            });
+            setExpenses(question['total_expenses'].amount); // Update expenses state
           });
+        }, []);
          
         //  async function cube(){
         //    var question = await EarnandExpense();
@@ -72,20 +72,20 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
         //  };
         //  cube().then((value) => {
         //     data[0].value = value;})
-        async function cube() {
-            return question['total_expenses'].amount;
-          };
-      } )
+        // async function cube() {
+        //     return question['total_expenses'].amount;
+          
+    //   } )
       
       
     
           
- 
-        // const data1 = [
-        //          { name: 'Expenses', value: earning},
-        //          { name: 'Earnings', value: expense},
-        //     ]
     
+        const data = [
+                 { name: 'Expenses', value: expenses},
+                 { name: 'Earnings', value: 10},
+            ]
+       
     
 
     return (
