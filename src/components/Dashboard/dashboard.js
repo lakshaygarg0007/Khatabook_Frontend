@@ -2,67 +2,91 @@ import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, Legend } from 'rechar
 import {useLocation} from 'react-router-dom';
 import './dashboard.css'
 import React, { useEffect, useState } from 'react';
+
 // const data = [
 //     { name: 'Expenses', value: 4000 },
 //     { name: 'Earnings', value: 3000 },
 // ];
-// const data1 = [
-//     { name: 'Group A', value: 400 },
-//     { name: 'Group B', value: 300 },
-//     { name: 'Group C', value: 300 },
-//     { name: 'Group D', value: 200 },
-// ];
+const data1 = [
+    { name: 'Group A', value: 400 },
+    { name: 'Group B', value: 300 },
+    { name: 'Group C', value: 300 },
+    { name: 'Group D', value: 200 },
+];
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
  export default function BarGraph () {
      const location = useLocation();
-     const [chartData, setChartData] = useState([]);
+    //  const [chartData, setChartData] = useState([]);
      const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
-     const earning = user_data.earning
-     const expense = user_data.expense
-    //  const data = [
-    //      { name: 'Expenses', value: earning},
-    //      { name: 'Earnings', value: expense},
-    // ]
-     //const { id, color } = state;
-     useEffect(() => {
-        // Fetch data from the API
-        fetch('http://192.168.43.225:8000/getEarningAndExpense')
-          .then(response => response.json())
-          .then(data => {
-            // Parse the data into the desired format
-            const parsedData = data.map(item => (
-                { name: item.name, value: item.value }
-            // { name: 'Earnings', value: expense}, 
-        
-                
-              ));
+     const user_id = user_data.id;
+    //  const request = {
+    //     "user_id" : user_id
+    //  }
+     const options = {
+        method: "GET",
+        // body: JSON.stringify(request),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    }
     
-            // Set the chart data state
-            setChartData(parsedData);
-          });
-        },[]);
-        const data = [
-                 { name: 'Expenses', value: earning},
-                 { name: 'Earnings', value: expense},
-            ]
-    //  const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
     //  const earning = user_data.earning
     //  const expense = user_data.expense
-    //  const data1 = [
-    //      { name: 'Expenses', value: earning},
-    //      { name: 'Earnings', value: expense},
-    // ]
-    // const user_data = (async () => {
-    //     const response = await fetch( 'http://192.168.43.225:8000/deleteEarning', {
-    //         method: 'POST',
-    //         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    //         body: JSON.stringify({ earning_id: earning._id }),
-    //     }).then(() => {
-    //         closeModal();
-    //     });
-    // });
+    // let data;
+     //const { id, color } = state;
+     var question;
+     var queue;
+     var data = [
+        { name: 'Expenses', value: 10},
+       { name: 'Earnings', value: 10 },
+    ];
+     useEffect(() => {
+        // Fetch data from the API
+         async function EarnandExpense() {
+            const totalEarningsandExpenses = await fetch('http://192.168.56.1:8000/getEarnAndExpens', options)
+            // console.log(JSON.stringify(totalEarningsandExpenses) + "suBli")
+            // .then(function(response) {
+            //     console.log(JSON.parse(response.body) + "suBli")
+            //   }).then(function(data) {
+            //     console.log(JSON.stringify(data) + "suBlikkkk") // this will be a string
+            //   });
+            .then((res) => res.json())
+         .then((data) => {
+            question = data
+            console.log(typeof question['total_expenses'].amount);
+            return data;
+         }) 
+         return totalEarningsandExpenses;
+        }  
+         EarnandExpense().then(() => {
+            cube().then((value) => {
+              data[0].value = value; // Assign the value to data[0]
+            });
+          });
+         
+        //  async function cube(){
+        //    var question = await EarnandExpense();
+        //    return question['total_expenses'].amount;
+        //  };
+        //  cube().then((value) => {
+        //     data[0].value = value;})
+        async function cube() {
+            return question['total_expenses'].amount;
+          };
+      } )
+      
+      
+    
+          
+ 
+        // const data1 = [
+        //          { name: 'Expenses', value: earning},
+        //          { name: 'Earnings', value: expense},
+        //     ]
+    
+    
 
     return (
         <>
@@ -84,8 +108,8 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
                             <div>
                                 <div className="rounded-lg overflow-hidden">
                                     <PieChart width={400} height={400}>
-                                        <Pie data={chartData} dataKey="value" cx={200} cy={200} outerRadius={80} fill="#8884d8">
-                                            {chartData.map((entry, index) => (
+                                        <Pie data={data} dataKey="value" cx={200} cy={200} outerRadius={80} fill="#8884d8">
+                                            {data.map((entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
                                         </Pie>
