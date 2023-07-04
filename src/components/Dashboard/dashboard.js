@@ -19,6 +19,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
  export default function BarGraph () {
      const location = useLocation();
      const [expenses, setExpenses] = useState(0);
+     const [earnings, setEarnings] = useState(0);
     //  const [chartData, setChartData] = useState([]);
      const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
      const user_id = user_data.id;
@@ -63,6 +64,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
         }  
          EarnandExpense().then(() => {
             setExpenses(question['total_expenses'].amount); // Update expenses state
+            setEarnings(question['total_earnings'].amount);
           });
         }, []);
          
@@ -83,7 +85,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     
         const data = [
                  { name: 'Expenses', value: expenses},
-                 { name: 'Earnings', value: 10},
+                 { name: 'Earnings', value: earnings},
             ]
        
     
