@@ -2,7 +2,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import { useState } from 'react';
 import BarGraph from './Dashboard/dashboard';
 import id from 'date-fns/esm/locale/id/index.js';
-import ipaddress from 'C:/Users/HP/OneDrive/Desktop/git/Khatabook_Frontend/src/setip.jsx';
+import ipaddress from "../setip";
 
 export default function Login(props) {
   const [email, set_email] = useState("");

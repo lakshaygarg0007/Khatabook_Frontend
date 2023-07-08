@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import ipaddress from 'C:/Users/HP/OneDrive/Desktop/git/Khatabook_Frontend/src/setip.jsx';
+import ipaddress from "../../setip";
 export default function AddExpense(props) {
     let navigate = useNavigate();
     const [payment_methods, set_payment_methods] = useState([]);

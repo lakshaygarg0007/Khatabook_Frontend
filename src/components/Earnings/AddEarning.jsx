@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import ipaddress from 'C:/Users/HP/OneDrive/Desktop/git/Khatabook_Frontend/src/setip.jsx';
+import ipaddress from "../../setip";
 
 export default function AddEarning(props) {
     let navigate = useNavigate();
