@@ -52,6 +52,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
                 const totalEarningsResponse = await fetch('http://192.168.56.1:8000/getTotalEarning', options);
                 const totalEarningsData = await totalEarningsResponse.json();
                 const totalEarnings = totalEarningsData['total_earnings'].amount;
+                console.log(totalEarnings);
                 setEarnings(totalEarnings);
           
                 const totalExpensesResponse = await fetch('http://192.168.56.1:8000/getTotalExpense', options);

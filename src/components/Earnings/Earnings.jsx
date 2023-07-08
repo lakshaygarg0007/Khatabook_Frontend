@@ -8,7 +8,6 @@ import ReactPaginate from 'react-paginate';
 import _ from 'lodash';
 import ipaddress from '../../setip.jsx';
 
-
 export default function Earnings(props) {
     const ip = ipaddress();
     const [data, setData] = useState([]);
