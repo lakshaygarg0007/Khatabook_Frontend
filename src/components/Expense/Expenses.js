@@ -1,11 +1,12 @@
 import React from 'react';
 import '../../App.js';
+import moment from 'moment';
 import ExpenseRecord from './ExpenseRecord.jsx';
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { format } from 'date-fns';
 import _ from 'lodash';
-import ipaddress from 'C:/Users/HP/OneDrive/Desktop/git/Khatabook_Frontend/src/setip.jsx';
+import ipaddress from '../../setip.jsx';
 
 const addExpense = require('./AddExpense')
 
@@ -49,12 +50,20 @@ export default function Expenses(props) {
         })
             .then((response) => response.json())
             .then((data) => {
+                const sortedExpenses = _.orderBy(data, ['date'], ['asc']);
                 setExpenses(data)
                 setPaginatedPosts(_(data).slice(0).take(page_size).value());
             });
 
         setPaginatedPosts(_(expenses).slice(0).take(page_size).value());
     }, [refresh]);
+
+    // const handleSortByDate = () => {
+    //     // Sort expenses based on date in ascending order
+    //     const sortedExpenses = _.orderBy(expenses, ['date'], ['desc']);
+    //     setExpenses(sortedExpenses);
+    //     setPaginatedPosts(_(sortedExpenses).slice(0).take(page_size).value());
+    //   };
 
     let index;
 

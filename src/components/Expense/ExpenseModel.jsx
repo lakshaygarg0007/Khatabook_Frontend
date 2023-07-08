@@ -1,7 +1,9 @@
 import moment from 'moment';
-
+import React, { useState } from 'react';
 function ExpenseModel({ expense, closeModal }) {
+    const [isEditable, setIsEditable] = useState(false);
     const delete_record = (async () => {
+        
         const response = await fetch('http://192.168.43.225:8000/deleteExpense', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -15,6 +17,7 @@ function ExpenseModel({ expense, closeModal }) {
         <div className="lg:w-2/3 w-full mx-auto overflow-auto">
             <table className="table-auto w-full text-left whitespace-no-wrap">
                 <thead>
+                    
                     <tr>
                         <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Amount</th>
                         <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Description</th>
@@ -39,7 +42,7 @@ function ExpenseModel({ expense, closeModal }) {
             <div className='flex flex-col items-center'>
                 <button className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none 
             hover:bg-red-600 rounded" onClick={delete_record}>Delete Record</button>
-            
+            <button className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" onClick={() => setIsEditable(!isEditable)}>Edit Record</button>
             </div>
         </div>
     )

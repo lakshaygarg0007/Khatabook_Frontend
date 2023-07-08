@@ -21,6 +21,7 @@ export default function EarningRecord(props) {
 
     return (
         <>
+          
             <tr key={props.index}>
                 <td className="px-4 py-3">{props.earning.amount}</td>
                 <td className="px-4 py-3">{props.earning.description}</td>
@@ -35,6 +36,7 @@ export default function EarningRecord(props) {
                     </button>
                 </td>
             </tr>
+             
             <ReactModal 
                 isOpen={modalIsOpen}
                 onRequestClose={() => setModalIsOpen(false)}
@@ -60,3 +62,4 @@ export default function EarningRecord(props) {
         </>
     )
 }
+
