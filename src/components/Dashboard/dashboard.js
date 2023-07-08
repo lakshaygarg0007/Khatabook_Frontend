@@ -20,6 +20,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
      const location = useLocation();
      const [expenses, setExpenses] = useState(0);
      const [earnings, setEarnings] = useState(0);
+     const [data, setData] = useState([]);
     //  const [chartData, setChartData] = useState([]);
      const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
      const user_id = user_data.id;
@@ -27,7 +28,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     //     "user_id" : user_id
     //  }
      const options = {
-        method: "GET",
+        method: "POST",
         // body: JSON.stringify(request),
         headers: {
             "Content-Type": "application/json",
@@ -38,8 +39,8 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     //  const expense = user_data.expense
     // let data;
      //const { id, color } = state;
-     var question;
-     var queue;
+    //  var question;
+    //  var queue;
     //  var data = [
     //     { name: 'Expenses', value: 10},
     //    { name: 'Earnings', value: 10 },
@@ -47,46 +48,38 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
      useEffect(() => {
         // Fetch data from the API
          async function EarnandExpense() {
-            const totalEarningsandExpenses = await fetch('http://192.168.56.1:8000/getEarnAndExpens', options)
-            // console.log(JSON.stringify(totalEarningsandExpenses) + "suBli")
-            // .then(function(response) {
-            //     console.log(JSON.parse(response.body) + "suBli")
-            //   }).then(function(data) {
-            //     console.log(JSON.stringify(data) + "suBlikkkk") // this will be a string
-            //   });
-            .then((res) => res.json())
-         .then((data) => {
-            question = data
-            console.log(typeof question['total_expenses'].amount);
-            return data;
-         }) 
-         return totalEarningsandExpenses;
-        }  
-         EarnandExpense().then(() => {
-            setExpenses(question['total_expenses'].amount); // Update expenses state
-            setEarnings(question['total_earnings'].amount);
-          });
+            try {
+                const totalEarningsResponse = await fetch('http://192.168.56.1:8000/getTotalEarning', options);
+                const totalEarningsData = await totalEarningsResponse.json();
+                const totalEarnings = totalEarningsData['total_earnings'].amount;
+                setEarnings(totalEarnings);
+          
+                const totalExpensesResponse = await fetch('http://192.168.56.1:8000/getTotalExpense', options);
+                const totalExpensesData = await totalExpensesResponse.json();
+                const totalExpenses = totalExpensesData['total_expenses'].amount;
+                setExpenses(totalExpenses);
+              } catch (error) {
+                console.error('Error fetching data:', error);
+              }
+            }
+            EarnandExpense();
         }, []);
-         
-        //  async function cube(){
-        //    var question = await EarnandExpense();
-        //    return question['total_expenses'].amount;
-        //  };
-        //  cube().then((value) => {
-        //     data[0].value = value;})
-        // async function cube() {
-        //     return question['total_expenses'].amount;
-          
-    //   } )
-      
-      
-    
-          
-    
-        const data = [
-                 { name: 'Expenses', value: expenses},
-                 { name: 'Earnings', value: earnings},
-            ]
+
+
+
+        useEffect(() => {
+            if (expenses !== null && earnings !== null) {
+              setData([
+                { name: 'Expenses', value: expenses },
+                { name: 'Earnings', value: earnings },
+              ]);
+            }
+          }, [expenses, earnings]);
+        
+        // const data = [
+        //          { name: 'Expenses', value: expenses},
+        //          { name: 'Earnings', value: earnings},
+        //     ]
        
     
 
@@ -144,3 +137,13 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 //     { name: 'Group C', value: 300 },
 //     { name: 'Group D', value: 200 },
 // ];
+// const totalEarningsandExpenses = await fetch('http://192.168.56.1:8000/getTotalEarning', options)
+//             const totalExpenseses = await fetch('http://192.168.56.1:8000/getTotalExpense', options) 
+//             .then((res) => res.json())
+//          .then((data) => {
+//             question = data
+//             console.log(typeof question['total_expenses'].amount);
+//             return data;
+//          }) 
+//          return totalEarningsandExpenses;
+//          return totalExpenseses;

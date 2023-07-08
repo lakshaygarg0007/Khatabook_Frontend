@@ -6,7 +6,7 @@ import Expenses from '../Expense/Expenses.js';
 import Pagination from './Pagination';
 import ReactPaginate from 'react-paginate';
 import _ from 'lodash';
-import ipaddress from 'C:/Users/HP/OneDrive/Desktop/git/Khatabook_Frontend/src/setip.jsx';
+import ipaddress from '../../setip.jsx';
 
 
 export default function Earnings(props) {
