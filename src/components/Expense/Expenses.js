@@ -13,7 +13,7 @@ const addExpense = require('./AddExpense')
 
 
 export default function Expenses(props) {
-    const ip = ipaddress();
+    const ip = ipaddress;
     const [selectedDate, setSelectedDate] = useState(null);
     const inputRef = useRef(null);
     const [expenses, setExpenses] = useState([]);

@@ -27,7 +27,7 @@ export default function Login(props) {
     }
 
     try {
-        const ip = ipaddress();
+        const ip = ipaddress;
         const response = await fetch(ip + '/login', options);
         if(response.status === 200) {
           const json_response = await response.json()
@@ -75,7 +75,7 @@ export default function Login(props) {
           </div>
           { error && 
             (
-              <div className="text-red-500  mt-4 px-12">{error}</div>
+              <div className="text-red-500  mt-4 px-12">{error.toString()}</div>
             )
           }
         </div>

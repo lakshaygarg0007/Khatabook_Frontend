@@ -9,12 +9,13 @@ export default function AddExpense(props) {
     const [payment_method, set_payment_method] = useState(null);
     const [date, set_date] = useState(null);
     const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
-    
+    const ip = ipaddress;
+
     const refreshPage = (() => {
         window.location.reload(false);
       });
     const add_record = (() => {
-        const ip = ipaddress();
+
         if (!amount || !description || !date) {
             alert("Please Fill all details before adding Record");
             return;
@@ -51,7 +52,7 @@ export default function AddExpense(props) {
         }
 
         async function fetch_payment_methods() {
-            const res = await fetch('http://192.168.43.225:8000/getPaymentMethods', options);
+            const res = await fetch(ip + '/getPaymentMethods', options);
             const data = await res.json();
             set_payment_methods(data);
         }

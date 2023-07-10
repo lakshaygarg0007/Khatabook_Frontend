@@ -9,7 +9,7 @@ export default function AddEarning(props) {
     const [date, set_date] = useState(null);
     const location = useLocation();
     const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
-    
+    const ip = ipaddress;
     
   
     const refreshPage = (() => {
@@ -17,7 +17,7 @@ export default function AddEarning(props) {
     });
 
     const add_record = (() => {
-        const ip = ipaddress();
+
         if (!amount || !description || !date) {
             alert("Please Fill all details before adding Record");
             return;
@@ -55,7 +55,7 @@ export default function AddEarning(props) {
         }
 
         async function fetch_payment_methods() {
-            const res = await fetch( 'http://192.168.43.225:8000/getPaymentMethods', options);
+            const res = await fetch( ip + '/getPaymentMethods', options);
             const data = await res.json();
             set_payment_methods(data);
         }

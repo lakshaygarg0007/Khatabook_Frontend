@@ -13,6 +13,7 @@ function Goto() {
         if (user_data === null || user_data === 'null') {
             return Login();
         } else {
+            console.log('im here')
             return <BarGraph />;
         }
     };

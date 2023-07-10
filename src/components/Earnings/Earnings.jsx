@@ -9,7 +9,7 @@ import _ from 'lodash';
 import ipaddress from '../../setip.jsx';
 
 export default function Earnings(props) {
-    const ip = ipaddress();
+    const ip = ipaddress;
     const [data, setData] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
