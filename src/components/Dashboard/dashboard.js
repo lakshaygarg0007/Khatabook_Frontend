@@ -21,6 +21,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
      const [expenses, setExpenses] = useState(0);
      const [earnings, setEarnings] = useState(0);
      const [data, setData] = useState([]);
+     const [pieChartData, setPieChartData] = useState([]);
     //  const [chartData, setChartData] = useState([]);
      const user_data = JSON.parse(sessionStorage.getItem('user_data')) ?? {};
      const user_id = user_data.id;
@@ -81,7 +82,19 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
         //          { name: 'Expenses', value: expenses},
         //          { name: 'Earnings', value: earnings},
         //     ]
-       
+        useEffect(() => {
+            // Fetch data for pie chart
+            async function getPieChartData() {
+              try {
+                const response = await fetch('http://192.168.56.1:8000/getPieChartData', options);
+                const chartData = await response.json();
+                setPieChartData(chartData);
+              } catch (error) {
+                console.error('Error fetching pie chart data:', error);
+              }
+            }
+            getPieChartData();
+          }, []);
     
 
     return (
@@ -104,18 +117,28 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
                             <div>
                                 <div className="rounded-lg overflow-hidden">
                                     <PieChart width={400} height={400}>
-                                        <Pie data={data} dataKey="value" cx={200} cy={200} outerRadius={80} fill="#8884d8">
+                                        <Pie data={data} dataKey="value" cx={200} cy={200} outerRadius={80} fill="#8884d8"  label>
                                             {data.map((entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
                                         </Pie>
                                         <Legend layout="vertical" align="right" payloadKey="name" />
                                     </PieChart>
+                                    <div className="legend">
+                                                      {pieChartData.map((entry, index) => (
+                                                        <div key={`legend-${index}`}>
+                                                          <span
+                                                            className="legend-color"
+                                                            style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                                                          />
+                                                          <span className="legend-label">{entry.name}</span>
+                                                        </div>
+                                                      ))}
                                 </div>
                             </div>
                             <button className="flex mx-auto mt-6 text-white bg-red-500 border-0 py-2 px-5 focus:outline-none hover:bg-red-600 rounded">Button</button>
                         </div>
-                        
+                         </div>
                     </div>
                 </div>
             </section>
