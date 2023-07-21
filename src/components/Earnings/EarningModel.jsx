@@ -14,8 +14,30 @@ function EarningModel({ earning, closeModal }) {
             body: JSON.stringify({ earning_id: earning._id }),
         }).then(() => {
             closeModal();
+              window.location.reload();
         });
     });
+    const handleSaveRecord = async () => {
+      try {
+        const response = await fetch('http://192.168.43.225:8000/addEarning', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            earning_id: earning._id,
+            amount: amount, // update the amount with the new value
+            description: description, // update the description with the new value
+            payment_method: paymentMethod, // update the payment method with the new value
+            date: date, // update the date with the new value
+          }),
+        });
+
+        setIsEditable(false);
+      } catch (error) {
+        console.log("error in editing earning record");
+      }
+    };
+    console.log(handleSaveRecord);
+
 
     console.log(document.getElementById('description'))
 
@@ -32,10 +54,10 @@ function EarningModel({ earning, closeModal }) {
                     </tr>
                 </thead>
                 <tbody>
-                    <td className="px-4 py-3 border-2 border-grey-300" contentEditable={true} >{earning.amount}</td>
-                    <td className="px-4 py-2 border-2 border-grey-300" contentEditable={true} id="description">{earning.description}</td>
-                    <td className="px-4 py-3 border-2 border-grey-300" contentEditable={true}>{earning.payment_method}</td>
-                    <td className="px-4 py-3 text-lg text-gray-900 border-2 border-grey-300" contentEditable={true}>{moment(earning.date).format('DD-MM-YYYY')}</td>
+                    <td className="px-4 py-3 border-2 border-grey-300" contentEditable={true} >{amount}</td>
+                    <td className="px-4 py-2 border-2 border-grey-300" contentEditable={true} id="description">{description}</td>
+                    <td className="px-4 py-3 border-2 border-grey-300" contentEditable={true}>{paymentMethod}</td>
+                    <td className="px-4 py-3 text-lg text-gray-900 border-2 border-grey-300" contentEditable={true}>{moment(date).format('DD-MM-YYYY')}</td>
                 </tbody>
             </table>
             <br />
@@ -46,7 +68,7 @@ function EarningModel({ earning, closeModal }) {
             </button>
             <div className='flex flex-col items-center'>
                 <div className="flex">
-                    <button className="flex mr-5 items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" onClick={delete_record}>Delete Record</button>
+                    <button className="flex mr-5 items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" onClick={ () => {delete_record();window.location.reload();}}>Delete Record</button>
                     <button className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" onClick={() => setIsEditable(!isEditable)}>Edit Record</button>
                 </div>
             </div>
