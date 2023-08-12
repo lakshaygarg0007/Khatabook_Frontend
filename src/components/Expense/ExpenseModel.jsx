@@ -2,6 +2,7 @@ import moment from 'moment';
 import React, { useState } from 'react';
 function ExpenseModel({ expense, closeModal }) {
     const [isEditable, setIsEditable] = useState(false);
+    const [amount, setAmount] = useState(expense.amount);
     const delete_record = (async () => {
         
         const response = await fetch('http://192.168.43.225:8000/deleteExpense', {
@@ -13,6 +14,42 @@ function ExpenseModel({ expense, closeModal }) {
             window.location.reload();
         });
     });
+
+     const handleAmountChange = (event) => {
+        console.log("amount is changing" + event.target.textContent);
+            setAmount(event.target.textContent);
+
+          };
+           const handleSaveRecord = async () => {
+                try {
+                  const response = await fetch('http://192.168.56.1:8000/UpdateExpense', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({
+                      expense_Id: expense._id,
+                      amount: expense.amount, // update the amount with the new value
+                    }),
+                  }).then(() => {
+                                closeModal();
+                                  window.location.reload();
+                            });
+
+                  setIsEditable(false);
+                  // Check if the request was successful (status code 200-299)
+                      if (response.ok) {
+                        // Do something if the request was successful
+                        console.log('Expense record updated successfully!');
+                      } else {
+                        // Handle errors if the request was not successful
+                        console.log('Error updating expense record');
+                      }
+
+                } catch (error) {
+                  console.log("error in editing expense record");
+                  console.log(error);
+                }
+              };
+              console.log(handleSaveRecord);
 
     return (
         <div className="lg:w-2/3 w-full mx-auto overflow-auto">
@@ -28,7 +65,7 @@ function ExpenseModel({ expense, closeModal }) {
                     </tr>
                 </thead>
                 <tbody>
-                    <td className="px-4 py-3">{expense.amount}</td>
+                    <td className="px-4 py-3" contentEditable={true} onBlur={handleAmountChange}>{expense.amount}</td>
                     <td className="px-4 py-3">{expense.description}</td>
                     <td className="px-4 py-3">{expense.payment_method}</td>
                     <td className="px-4 py-3 text-lg text-gray-900">{moment(expense.date).format('DD-MM-YYYY')}</td>
@@ -41,12 +78,13 @@ function ExpenseModel({ expense, closeModal }) {
                 </svg>
             </button>
             <div className='flex flex-col items-center'>
-                <button className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none 
+                <button className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none
             hover:bg-red-600 rounded" onClick={ () => {delete_record();window.location.reload();}}>Delete Record</button>
-            <button className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" onClick={() => setIsEditable(!isEditable)}>Edit Record</button>
+            <button className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" onClick={() => {setIsEditable(true);handleSaveRecord();}}>Edit Record</button>
             </div>
         </div>
     )
 }
 
 export default ExpenseModel;
+// onClick={() => {setIsEditable(true);handleSaveRecord();}}>Edit Record</button>
