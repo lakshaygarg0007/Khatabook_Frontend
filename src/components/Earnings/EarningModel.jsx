@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { useState } from 'react';
+import ipaddress from "../../setip";
 
 function EarningModel({ earning, closeModal }) {
     const [isEditable, setIsEditable] = useState(false);
@@ -8,12 +9,31 @@ function EarningModel({ earning, closeModal }) {
     const [paymentMethod, setPaymentMethod] = useState(earning.payment_method);
     const [date, setDate] = useState(earning.date);
     const delete_record = (async () => {
-        const response = await fetch( 'http://192.168.43.225:8000/deleteEarning', {
+        const response = await fetch( ipaddress + '/deleteEarning', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({ earning_id: earning._id }),
         }).then(() => {
             closeModal();
+        });
+    });
+
+    const handleAmountChange = (e) => {
+        setAmount(e.target.textContent);
+    };
+
+
+    const edit_record = (async () => {
+        const response = await fetch(ipaddress + '/updateEarning', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+                earning_id: earning._id,
+                amount : amount
+            }),
+        }).then(() => {
+            closeModal();
+            window.location.reload();
         });
     });
 
@@ -32,10 +52,10 @@ function EarningModel({ earning, closeModal }) {
                     </tr>
                 </thead>
                 <tbody>
-                    <td className="px-4 py-3 border-2 border-grey-300" contentEditable={true} >{earning.amount}</td>
-                    <td className="px-4 py-2 border-2 border-grey-300" contentEditable={true} id="description">{earning.description}</td>
-                    <td className="px-4 py-3 border-2 border-grey-300" contentEditable={true}>{earning.payment_method}</td>
-                    <td className="px-4 py-3 text-lg text-gray-900 border-2 border-grey-300" contentEditable={true}>{moment(earning.date).format('DD-MM-YYYY')}</td>
+                    <td className="px-4 py-3 border-2 border-grey-300" contentEditable={true} onBlur={handleAmountChange}>{earning.amount}</td>
+                    <td className="px-4 py-2 border-2 border-grey-300"  id="description">{earning.description}</td>
+                    <td className="px-4 py-3 border-2 border-grey-300" >{earning.payment_method}</td>
+                    <td className="px-4 py-3 text-lg text-gray-900 border-2 border-grey-300">{moment(earning.date).format('DD-MM-YYYY')}</td>
                 </tbody>
             </table>
             <br />
@@ -47,7 +67,8 @@ function EarningModel({ earning, closeModal }) {
             <div className='flex flex-col items-center'>
                 <div className="flex">
                     <button className="flex mr-5 items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" onClick={delete_record}>Delete Record</button>
-                    <button className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" onClick={() => setIsEditable(!isEditable)}>Edit Record</button>
+                    <button className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded"
+                            onClick={() => edit_record()}>Edit Record</button>
                 </div>
             </div>
         </div>

@@ -1,2 +1,2 @@
-let ipaddress = 'http://192.168.0.108:8000';
+let ipaddress = ' http://192.168.0.105:8000\n';
 export default ipaddress

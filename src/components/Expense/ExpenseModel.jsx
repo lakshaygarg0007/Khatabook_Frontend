@@ -13,6 +13,19 @@ function ExpenseModel({ expense, closeModal }) {
         });
     });
 
+    const edit_record = (async () => {
+        const response = await fetch('http://192.168.43.225:8000/updateExpense', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+                expense_id: expense._id,
+                amount : expense.amount
+            }),
+        }).then(() => {
+            closeModal();
+        });
+    });
+
     return (
         <div className="lg:w-2/3 w-full mx-auto overflow-auto">
             <table className="table-auto w-full text-left whitespace-no-wrap">
@@ -27,10 +40,10 @@ function ExpenseModel({ expense, closeModal }) {
                     </tr>
                 </thead>
                 <tbody>
-                    <td className="px-4 py-3">{expense.amount}</td>
-                    <td className="px-4 py-3">{expense.description}</td>
-                    <td className="px-4 py-3">{expense.payment_method}</td>
-                    <td className="px-4 py-3 text-lg text-gray-900">{moment(expense.date).format('DD-MM-YYYY')}</td>
+                    <td className="px-4 py-3 border-2 border-grey-300" contentEditable={true}>{expense.amount}</td>
+                    <td className="px-4 py-3 border-2 border-grey-300" contentEditable={true}>{expense.description}</td>
+                    <td className="px-4 py-3 border-2 border-grey-300" contentEditable={true}>{expense.payment_method}</td>
+                    <td className="px-4 py-3 text-lg text-gray-900 border-2 border-grey-300" contentEditable={true}>{moment(expense.date).format('DD-MM-YYYY')}</td>
                 </tbody>
             </table>
             <br />
@@ -42,7 +55,8 @@ function ExpenseModel({ expense, closeModal }) {
             <div className='flex flex-col items-center'>
                 <button className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none 
             hover:bg-red-600 rounded" onClick={delete_record}>Delete Record</button>
-            <button className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" onClick={() => setIsEditable(!isEditable)}>Edit Record</button>
+            <button className="flex items-center text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded"
+                    onClick={() => edit_record()}>Edit Record</button>
             </div>
         </div>
     )
